@@ -59,7 +59,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         m_leapMonth = lunarDate.leap
         let yearRowIndex = lunarDate.year - 1900
         var monthRowIndex = lunarDate.month - 1
-        if lunarDate.leap != 0 && monthRowIndex >= lunarDate.leap {
+        if lunarDate.leap != 0 && lunarDate.month >= lunarDate.leap {
             monthRowIndex += 1
         }
         let dateRowIndex = lunarDate.day - 1
