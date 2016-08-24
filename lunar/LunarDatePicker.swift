@@ -177,7 +177,8 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
 //            return
 //        }
         let year = 1900 + m_yearIndex
-        var month = m_monthIndex + 1
+        let origMonth = m_monthIndex + 1
+        var month = origMonth
         if m_leapMonth != 0 {
             if m_monthIndex >= m_leapMonth {
                 month = m_monthIndex
@@ -185,7 +186,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         }
         let day = m_dayIndex + 1
         var leap = 0
-        if m_leapMonth == month {
+        if m_leapMonth == month && month != origMonth {
             leap = 1
         }
         
@@ -432,7 +433,7 @@ class LunarUtils: NSObject {
         let lunarDay = lunarDate.day
         let lunarMonth = lunarDate.month
         let lunarYear = lunarDate.year
-        let lunarLeap = lunarDate.leap == lunarDate.month ? 1 : 0
+        let lunarLeap = lunarDate.leap
         var a11:Int
         var b11:Int
         if (lunarMonth < 11) {
