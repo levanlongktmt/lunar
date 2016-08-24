@@ -61,7 +61,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         m_leapMonth = lunarDate.leap
         let yearRowIndex = lunarDate.year - BASE_YEAR
         var monthRowIndex = lunarDate.month - 1
-        if lunarDate.leap != 0 && lunarDate.month >= lunarDate.leap {
+        if lunarDate.leap != 0 && ((lunarDate.month > lunarDate.leap) || (lunarDate.month == lunarDate.leap && lunarDate.isLeap == 1)) {
             monthRowIndex += 1
         }
         let dateRowIndex = lunarDate.day - 1
@@ -192,7 +192,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
             leap = 1
         }
         
-        let lunarDate = LunarCal(day: day, month: month, year: year, leap: leap)
+        let lunarDate = LunarCal(day: day, month: month, year: year, leap: leap, isLeap: leap)
         let solarDate = LunarUtils.sharedInstance().convertLunar2Solar(lunarDate, timeZone: 7.0)
         let dateFormater = NSDateFormatter()
         dateFormater.dateFormat = "dd-MM-yyyy"
@@ -413,11 +413,15 @@ class LunarUtils: NSObject {
         let diff:Int = ConvertINT(Double((monthStart - a11)/29))
         lunarLeap = 0
         lunarMonth = diff+11
+        var isLeap = 0
         if (b11 - a11 > 365) {
             let leapMonthDiff:Int = getLeapMonthOffset(a11, timeZone: timeZone)
             lunarLeap = leapMonthDiff + 11 - 13
             if (diff >= leapMonthDiff) {
                 lunarMonth = diff + 10
+                if (diff == leapMonthDiff) {
+                    isLeap = 1
+                }
             }
         }
         if (lunarMonth > 12) {
@@ -427,7 +431,7 @@ class LunarUtils: NSObject {
             lunarYear -= 1
         }
         lunarLeap = lunarLeap < 0 ? lunarLeap + 12 : lunarLeap
-        return LunarCal(day: lunarDay, month: lunarMonth, year: lunarYear, leap: lunarLeap)
+        return LunarCal(day: lunarDay, month: lunarMonth, year: lunarYear, leap: lunarLeap, isLeap: isLeap)
     }
     
     func convertLunar2Solar( lunarDate: LunarCal, timeZone:Double) -> SolarCal {
@@ -516,4 +520,5 @@ struct LunarCal {
     var month: Int = 0
     var year: Int = 0
     var leap: Int = 0
+    var isLeap: Int = 0
 }
