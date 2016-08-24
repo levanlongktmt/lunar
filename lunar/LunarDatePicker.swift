@@ -18,6 +18,8 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
     private var m_yearIndex = 0
     private var m_isNotify = false
     
+    private let BASE_YEAR = 1900
+    private var YEAR_COUNT = 201
     var delegate: LunarDatePickerDelegate?
     
     var timeZone: Double = 7.0
@@ -57,7 +59,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
     
     private func setLunarDate(lunarDate: LunarCal) {
         m_leapMonth = lunarDate.leap
-        let yearRowIndex = lunarDate.year - 1900
+        let yearRowIndex = lunarDate.year - BASE_YEAR
         var monthRowIndex = lunarDate.month - 1
         if lunarDate.leap != 0 && lunarDate.month >= lunarDate.leap {
             monthRowIndex += 1
@@ -85,7 +87,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
             return m_leapMonth == 0 ? 12 : 13
         }
         else {
-            return 201
+            return YEAR_COUNT
         }
     }
     
@@ -144,12 +146,12 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
             }
         case 2:
             if showYearName {
-                let year = 1900 + row
+                let year = BASE_YEAR + row
                 let yearName = LunarUtils.sharedInstance().getLunarYearName(year)
                 label?.text = String(format: "%@-%d\t", yearName, year)
             }
             else {
-                label?.text = String(1900 + row)
+                label?.text = String(BASE_YEAR + row)
             }
         default:
             break
@@ -176,7 +178,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
 //            m_isNotify = true
 //            return
 //        }
-        let year = 1900 + m_yearIndex
+        let year = BASE_YEAR + m_yearIndex
         let origMonth = m_monthIndex + 1
         var month = origMonth
         if m_leapMonth != 0 {
@@ -201,7 +203,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
     
     private func setYearIndex(index: Int) {
         m_yearIndex = index
-        let year = 1900 + m_yearIndex
+        let year = BASE_YEAR + m_yearIndex
         let (_, leapMonth, baseMonth) = LunarUtils.sharedInstance().eastimateLeapYear(year)
         
         m_baseFullMonthIndex = baseMonth + 1
@@ -256,7 +258,6 @@ class LunarUtils: NSObject {
     
     private let CAN_ARR = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"]
     private let CHI_ARR = ["Thân", "Dậu", "Tuất", "Hợi", "Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"]
-    private let CERTAIN_LEAP = [0,3,6,9,11,14,17]
     private var dateFormater: NSDateFormatter!
     let PI = M_PI
     
