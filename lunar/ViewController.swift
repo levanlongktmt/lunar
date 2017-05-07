@@ -15,13 +15,13 @@ class ViewController: UIViewController, LunarDatePickerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let locateX = NSLocale(localeIdentifier: "vi_VN")
-        let cal = NSCalendar.currentCalendar()
+        let locateX = Locale(identifier: "vi_VN")
+        var cal = Calendar.current
         cal.locale = locateX
         datePicker.calendar = cal
-        datePicker.datePickerMode = .Date
-        datePicker.addTarget(self, action: #selector(ViewController.onDatePickerChanged(_:)), forControlEvents: .ValueChanged)
-        
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(ViewController.onDatePickerChanged(_:)), for: .valueChanged)
+        lunarDatePicker.showYearName = false
         lunarDatePicker.delegate = self
     }
 
@@ -30,11 +30,11 @@ class ViewController: UIViewController, LunarDatePickerDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func onDatePickerChanged(sender: UIDatePicker) {
+    func onDatePickerChanged(_ sender: UIDatePicker) {
         lunarDatePicker.setGRDate(sender.date)
     }
 
-    func onLunarDateChanged(date: NSDate) {
+    func onLunarDateChanged(_ date: Date) {
         datePicker.setDate(date, animated: true)
     }
 }

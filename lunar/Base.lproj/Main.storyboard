@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -14,18 +18,18 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hMz-yL-bSQ" customClass="LunarDatePicker" customModule="lunar" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="280" width="320" height="216"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="40" y="280" width="295" height="216"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="216" id="kv9-xp-2AL"/>
                                 </constraints>
                             </view>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="EB1-3Q-dLw">
-                                <rect key="frame" x="0.0" y="44" width="320" height="216"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="216"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="216" id="R6h-E9-9VN"/>
                                 </constraints>
@@ -34,17 +38,16 @@
                                 </date>
                             </datePicker>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="EB1-3Q-dLw" secondAttribute="trailing" id="Jng-Vi-xf2"/>
                             <constraint firstItem="hMz-yL-bSQ" firstAttribute="top" secondItem="EB1-3Q-dLw" secondAttribute="bottom" constant="20" id="aPX-Vg-9tU"/>
                             <constraint firstItem="EB1-3Q-dLw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="dC5-jE-TGB"/>
-                            <constraint firstItem="hMz-yL-bSQ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="lTJ-Hu-3DJ"/>
-                            <constraint firstAttribute="trailing" secondItem="hMz-yL-bSQ" secondAttribute="trailing" id="u0B-5q-uvg"/>
+                            <constraint firstItem="hMz-yL-bSQ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="40" id="lTJ-Hu-3DJ"/>
+                            <constraint firstAttribute="trailing" secondItem="hMz-yL-bSQ" secondAttribute="trailing" constant="40" id="u0B-5q-uvg"/>
                             <constraint firstItem="EB1-3Q-dLw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="24" id="uUl-19-per"/>
                         </constraints>
                     </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="datePicker" destination="EB1-3Q-dLw" id="Kng-Pj-lHd"/>
                         <outlet property="lunarDatePicker" destination="hMz-yL-bSQ" id="D3h-AP-V6u"/>

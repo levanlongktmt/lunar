@@ -10,22 +10,20 @@ import UIKit
 
 class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
 
-    private var pickerView: UIPickerView?
-    private var m_baseFullMonthIndex = 0
-    private var m_leapMonth = 0
-    private var m_dayIndex = 0
-    private var m_monthIndex = 0
-    private var m_yearIndex = 0
-    private var m_isNotify = false
-    
-    private let BASE_YEAR = 1900
-    private var YEAR_COUNT = 201
+    fileprivate var pickerView: UIPickerView?
+    fileprivate var m_baseFullMonthIndex = 0
+    fileprivate var m_leapMonth = 0
+    fileprivate var m_dayIndex = 0
+    fileprivate var m_monthIndex = 0
+    fileprivate var m_yearIndex = 0
+    fileprivate var m_isNotify = false
+    fileprivate let BASE_YEAR = 1900
+    fileprivate var YEAR_COUNT = 201
     var delegate: LunarDatePickerDelegate?
     
     var timeZone: Double = 7.0
     var monthLabel = "Tháng"
     var showYearName = true
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,27 +35,27 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         setupUI()
     }
     
-    private func setupUI() {
+    fileprivate func setupUI() {
         pickerView = UIPickerView(frame: self.bounds)
         self.addSubview(pickerView!)
         pickerView?.translatesAutoresizingMaskIntoConstraints = false
         let views = ["pickerView" : pickerView!]
-        var constrains = NSLayoutConstraint.constraintsWithVisualFormat("V:|[pickerView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
-        constrains += NSLayoutConstraint.constraintsWithVisualFormat("H:|[pickerView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
-        NSLayoutConstraint.activateConstraints(constrains)
+        var constrains = NSLayoutConstraint.constraints(withVisualFormat: "V:|[pickerView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
+        constrains += NSLayoutConstraint.constraints(withVisualFormat: "H:|[pickerView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
+        NSLayoutConstraint.activate(constrains)
         pickerView?.dataSource = self
         pickerView?.delegate = self
-        setGRDate(NSDate(timeIntervalSinceNow: 0))
+        setGRDate(Date(timeIntervalSinceNow: 0))
     }
     
-    func setGRDate(date: NSDate, isNotify: Bool = false ) {
+    func setGRDate(_ date: Date, isNotify: Bool = false ) {
         m_isNotify = isNotify
         let (lunarDate, dateCount) = LunarUtils.sharedInstance().getLunarCalDetail(date, timeZone: timeZone)
         m_baseFullMonthIndex = dateCount == 30 ? lunarDate.month - 1 : lunarDate.month
         setLunarDate(lunarDate)
     }
     
-    private func setLunarDate(lunarDate: LunarCal) {
+    fileprivate func setLunarDate(_ lunarDate: LunarCal) {
         m_leapMonth = lunarDate.leap
         let yearRowIndex = lunarDate.year - BASE_YEAR
         var monthRowIndex = lunarDate.month - 1
@@ -75,11 +73,11 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         pickerView?.selectRow(dateRowIndex, inComponent: 0, animated: true)
     }
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 3
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if component == 0 {
             return 30
         }
@@ -91,39 +89,39 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         }
     }
     
-    func pickerView(pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 40.0
     }
     
-    func pickerView(pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        // [20] [30] [50]
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        
         if component == 0 {
             return pickerView.bounds.width * 0.2
         }
         else if component == 1 {
-            return pickerView.bounds.width * 0.30
+            return pickerView.bounds.width * 0.3
         }
         else {
-            return pickerView.bounds.width * 0.50
+            return pickerView.bounds.width * 0.3
         }
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView {
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var label = view as? UILabel
         if label == nil {
             label = UILabel()
             label?.adjustsFontSizeToFitWidth = false
             if component == 0 {
-                label?.textAlignment = .Right
+                label?.textAlignment = .left
             }
             else if component == 2 {
-                label?.textAlignment = .Left
+                label?.textAlignment = .right
             }
             else {
-                label?.textAlignment = .Center
+                label?.textAlignment = .center
             }
-            label?.font = UIFont.systemFontOfSize(20)
-            label?.backgroundColor = UIColor.clearColor()
+            label?.font = UIFont.systemFont(ofSize: 20)
+            label?.backgroundColor = UIColor.clear
         }
         
         switch  component {
@@ -138,7 +136,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
                     label?.text = String(format: "%@ %d", monthLabel, row + 1)
                 }
                 else if row == m_leapMonth {
-                    label?.text = String(format: "%@ %d (N)", monthLabel, row)
+                    label?.text = String(format: "%@ %d (*)", monthLabel, row)
                 }
                 else {
                     label?.text = String(format: "%@ %d", monthLabel, row)
@@ -148,7 +146,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
             if showYearName {
                 let year = BASE_YEAR + row
                 let yearName = LunarUtils.sharedInstance().getLunarYearName(year)
-                label?.text = String(format: "%@-%d\t", yearName, year)
+                label?.text = String(format: "%@-%d", yearName, year)
             }
             else {
                 label?.text = String(BASE_YEAR + row)
@@ -159,7 +157,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         return label!
     }
 
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch component {
         case 0:
             setDayIndex(row)
@@ -173,7 +171,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         notifyDateChanged()
     }
     
-    private func notifyDateChanged() {
+    fileprivate func notifyDateChanged() {
 //        if !m_isNotify {
 //            m_isNotify = true
 //            return
@@ -194,14 +192,14 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         
         let lunarDate = LunarCal(day: day, month: month, year: year, leap: leap, isLeap: leap)
         let solarDate = LunarUtils.sharedInstance().convertLunar2Solar(lunarDate, timeZone: 7.0)
-        let dateFormater = NSDateFormatter()
+        let dateFormater = DateFormatter()
         dateFormater.dateFormat = "dd-MM-yyyy"
         let solarDateString = String(format: "%2d-%2d-%4d", solarDate.day, solarDate.month, solarDate.year)
-        delegate?.onLunarDateChanged!(dateFormater.dateFromString(solarDateString)!)
+        delegate?.onLunarDateChanged!(dateFormater.date(from: solarDateString)!)
         //m_isNotify = true
     }
     
-    private func setYearIndex(index: Int) {
+    fileprivate func setYearIndex(_ index: Int) {
         m_yearIndex = index
         let year = BASE_YEAR + m_yearIndex
         let (_, leapMonth, baseMonth) = LunarUtils.sharedInstance().eastimateLeapYear(year)
@@ -219,7 +217,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         }
     }
     
-    private func setMonthIndex(index: Int) {
+    fileprivate func setMonthIndex(_ index: Int) {
         m_monthIndex = index
         if abs(m_monthIndex - m_baseFullMonthIndex) % 2 != 0 && m_dayIndex > 28 {
             pickerView?.selectRow(28, inComponent: 0, animated: true)
@@ -227,7 +225,7 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         }
     }
     
-    private func setDayIndex(index: Int) {
+    fileprivate func setDayIndex(_ index: Int) {
         if abs(m_monthIndex - m_baseFullMonthIndex) % 2 != 0 && index > 28 {
             pickerView?.selectRow(28, inComponent: 0, animated: true)
             m_dayIndex = 28
@@ -239,29 +237,29 @@ class LunarDatePicker: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
 }
 
 @objc protocol LunarDatePickerDelegate {
-    optional func onLunarDateChanged(date: NSDate)
+    @objc optional func onLunarDateChanged(_ date: Date)
 }
 
 
 class LunarUtils: NSObject {
     
-    private static var m_instance = LunarUtils()
+    fileprivate static var m_instance = LunarUtils()
     
     static func sharedInstance() -> LunarUtils {
         return m_instance
     }
     
-    private override init() {
-        dateFormater = NSDateFormatter()
+    fileprivate override init() {
+        dateFormater = DateFormatter()
         dateFormater.dateFormat = "dd-MM-yyyy"
     }
     
-    private let CAN_ARR = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"]
-    private let CHI_ARR = ["Thân", "Dậu", "Tuất", "Hợi", "Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"]
-    private var dateFormater: NSDateFormatter!
+    fileprivate let CAN_ARR = ["Canh", "Tân", "Nhâm", "Quý", "Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ"]
+    fileprivate let CHI_ARR = ["Thân", "Dậu", "Tuất", "Hợi", "Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi"]
+    fileprivate var dateFormater: DateFormatter!
     let PI = M_PI
     
-    func jdFromDate( dd:Int, mm:Int, yy:Int) -> Int {
+    func jdFromDate( _ dd:Int, mm:Int, yy:Int) -> Int {
         let a:Int = (14 - mm) / 12
         let y:Int = yy+4800-a
         let m:Int = mm+12*a-3
@@ -272,7 +270,7 @@ class LunarUtils: NSObject {
         return jd
     }
     
-    func jdToDate( jd:Int ) -> SolarCal {
+    func jdToDate( _ jd:Int ) -> SolarCal {
         let a:Int
         let b:Int
         let c:Int
@@ -291,11 +289,11 @@ class LunarUtils: NSObject {
         let year:Int = b*100 + d - 4800 + m/10
         return SolarCal(day: day, month: month, year: year)
     }
-    func SunLongitude(jdn:Double) -> Double {
+    func SunLongitude(_ jdn:Double) -> Double {
         return SunLongitudeAA98(jdn)
     }
     
-    func SunLongitudeAA98(jdn:Double) -> Double {
+    func SunLongitudeAA98(_ jdn:Double) -> Double {
         let T:Double = (jdn - 2451545.0 ) / 36525 // Time in Julian centuries from 2000-01-01 12:00:00 GMT
         let T2:Double = T*T
         let dr:Double = PI/180 // degree to radian
@@ -314,11 +312,11 @@ class LunarUtils: NSObject {
         return L
     }
     
-    func NewMoon(k:Int) -> Double {
+    func NewMoon(_ k:Int) -> Double {
         return NewMoonAA98(Double(k))
     }
     
-    func NewMoonAA98(k:Double) -> Double {
+    func NewMoonAA98(_ k:Double) -> Double {
         let T:Double = k/1236.85
         let T2:Double = T * T
         let T3:Double = T2 * T
@@ -346,20 +344,20 @@ class LunarUtils: NSObject {
         return JdNew
     }
     
-    func ConvertINT(d:Double)->Int {
+    func ConvertINT(_ d:Double)->Int {
         return Int(floor(d))
     }
     
-    func getSunLongitude(dayNumber:Int, timeZone:Double) -> Double {
+    func getSunLongitude(_ dayNumber:Int, timeZone:Double) -> Double {
         return SunLongitude( Double(dayNumber) - 0.5 - timeZone/24)
     }
     
-    func getNewMoonDay(k:Int, timeZone:Double) -> Int{
+    func getNewMoonDay(_ k:Int, timeZone:Double) -> Int{
         let jd:Double = NewMoon(k)
         return ConvertINT(jd + 0.5 + timeZone / 24)
     }
     
-    func getLunarMonth11( yy:Int, timeZone:Double) -> Int {
+    func getLunarMonth11( _ yy:Int, timeZone:Double) -> Int {
         let off:Double = Double(jdFromDate(31, mm: 12, yy: yy)) - 2415021.076998695
         let k:Int = ConvertINT(off / 29.530588853)
         var nm:Int = getNewMoonDay(k, timeZone: timeZone)
@@ -371,7 +369,7 @@ class LunarUtils: NSObject {
         return nm
     }
     
-    func getLeapMonthOffset(a11:Int, timeZone:Double) -> Int {
+    func getLeapMonthOffset(_ a11:Int, timeZone:Double) -> Int {
         let k:Int = ConvertINT(0.5 + ( Double(a11) - 2415021.076998695) / 29.530588853)
         var last:Int
         var i:Int = 1
@@ -384,7 +382,7 @@ class LunarUtils: NSObject {
         return i-1
     }
     
-    func convertSolar2Lunar(solarDate: SolarCal, timeZone:Double) -> LunarCal {
+    func convertSolar2Lunar(_ solarDate: SolarCal, timeZone:Double) -> LunarCal {
         let dd = solarDate.day
         let mm = solarDate.month
         let yy = solarDate.year
@@ -434,7 +432,7 @@ class LunarUtils: NSObject {
         return LunarCal(day: lunarDay, month: lunarMonth, year: lunarYear, leap: lunarLeap, isLeap: isLeap)
     }
     
-    func convertLunar2Solar( lunarDate: LunarCal, timeZone:Double) -> SolarCal {
+    func convertLunar2Solar( _ lunarDate: LunarCal, timeZone:Double) -> SolarCal {
         let lunarDay = lunarDate.day
         let lunarMonth = lunarDate.month
         let lunarYear = lunarDate.year
@@ -471,12 +469,12 @@ class LunarUtils: NSObject {
         return jdToDate(monthStart+lunarDay-1)
     }
     
-    func getLunarCalDetail(date: NSDate, timeZone: Double) -> (LunarCal, Int) {
-        let components = NSCalendar.currentCalendar().components([.Year, .Month, .Day], fromDate: date)
-        let baseSolarDate = SolarCal(day: components.day, month: components.month, year: components.year)
-        let datePlus30 = NSDate(timeInterval: 30 * 86400, sinceDate: date)
-        let componentsPlus30 = NSCalendar.currentCalendar().components([.Year, .Month, .Day], fromDate: datePlus30)
-        let solarDatePlus30 = SolarCal(day: componentsPlus30.day, month: componentsPlus30.month, year: componentsPlus30.year)
+    func getLunarCalDetail(_ date: Date, timeZone: Double) -> (LunarCal, Int) {
+        let components = (Calendar.current as NSCalendar).components([.year, .month, .day], from: date)
+        let baseSolarDate = SolarCal(day: components.day!, month: components.month!, year: components.year!)
+        let datePlus30 = Date(timeInterval: 30 * 86400, since: date)
+        let componentsPlus30 = (Calendar.current as NSCalendar).components([.year, .month, .day], from: datePlus30)
+        let solarDatePlus30 = SolarCal(day: componentsPlus30.day!, month: componentsPlus30.month!, year: componentsPlus30.year!)
         let baseLunarDate = convertSolar2Lunar(baseSolarDate, timeZone: timeZone)
         let lunarDatePlus30 = convertSolar2Lunar(solarDatePlus30, timeZone: timeZone)
         
@@ -488,21 +486,21 @@ class LunarUtils: NSObject {
         }
     }
     
-    func getLunarYearName(year: Int) -> String {
+    func getLunarYearName(_ year: Int) -> String {
         let canIndex = year % 10
         let chiIndex = year % 12
         return String(format: "%@ %@", CAN_ARR[canIndex], CHI_ARR[chiIndex])
     }
     
-    func eastimateLeapYear(year: Int) -> (Bool, Int, Int) {
+    func eastimateLeapYear(_ year: Int) -> (Bool, Int, Int) {
         let dateString = String(format: "21-06-%d", year)
-        let date = dateFormater.dateFromString(dateString)!
+        let date = dateFormater.date(from: dateString)!
         let (lunarDate, dateCount) = getLunarCalDetail(date, timeZone: 7.0)
         let baseFullMonth = dateCount == 30 ? lunarDate.month : lunarDate.month + 1
         return (lunarDate.leap != 0, lunarDate.leap, baseFullMonth)
     }
     
-    func getLeapMonthOfYear(year: Int) -> Int {
+    func getLeapMonthOfYear(_ year: Int) -> Int {
         let summerSolsticeDate = SolarCal(day: 21, month: 6, year: year)
         let lunarDate = convertSolar2Lunar(summerSolsticeDate, timeZone: 7)
         return lunarDate.leap
